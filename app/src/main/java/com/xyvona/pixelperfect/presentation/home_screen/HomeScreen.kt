@@ -66,15 +66,15 @@ fun HomeScreen(
                 onSearchClick = onSearchClick,
                 scrollBehavior = scrollBehavior
             )
-            ImageVerticalGrid(
-                images = images,
-                onImageClick = onImageClick,
-                onImageDragStart = { image ->
-                    activeImage = image
-                    showImagePreview = true
-                },
-                onImageDragEnd = { showImagePreview = false }
-            )
+//            ImageVerticalGrid(
+//                images = images,
+//                onImageClick = onImageClick,
+//                onImageDragStart = { image ->
+//                    activeImage = image
+//                    showImagePreview = true
+//                },
+//                onImageDragEnd = { showImagePreview = false }
+//            )
         }
         FloatingActionButton(
             modifier = modifier.align(Alignment.BottomEnd).padding(24.dp),

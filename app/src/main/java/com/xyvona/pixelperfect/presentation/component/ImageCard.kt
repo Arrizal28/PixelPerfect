@@ -19,16 +19,16 @@ import com.xyvona.pixelperfect.domain.model.UnsplashImage
 
 @Composable
 fun ImageCard(
-    image: UnsplashImage,
+    image: UnsplashImage?,
     modifier: Modifier = Modifier
 ) {
     val imageRequest = ImageRequest.Builder(LocalContext.current)
-        .data(image.imageUrlSmall)
+        .data(image?.imageUrlSmall)
         .crossfade(true)
         .build()
 
     val aspectRatio: Float by remember {
-        derivedStateOf { (image.width.toFloat() ?:1f) / (image.height.toFloat() ?: 1f) }
+        derivedStateOf { (image?.width?.toFloat() ?:1f) / (image?.height?.toFloat() ?: 1f) }
     }
 
     Card(

@@ -78,6 +78,10 @@ class MainActivity : ComponentActivity() {
                 val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
                 val snackbarHostState = remember { SnackbarHostState() }
 
+                var searchQuery by rememberSaveable {
+                    mutableStateOf("")
+                }
+
                 Scaffold(
                     snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
                     modifier = Modifier
@@ -87,7 +91,13 @@ class MainActivity : ComponentActivity() {
                         NetworkStatusBar(showMessageBar = showMessageBar, backgroundColor = backgroundColor, message = message)
                     }
                 ) {
-                    NavGraphSetup(navController = navController, scrollBehavior = scrollBehavior, snackbarHostState = snackbarHostState)
+                    NavGraphSetup(
+                        navController = navController,
+                        scrollBehavior = scrollBehavior,
+                        snackbarHostState = snackbarHostState,
+                        searchQuery = searchQuery,
+                        onSearchQueryChange = { searchQuery = it }
+                    )
                 }
             }
         }
