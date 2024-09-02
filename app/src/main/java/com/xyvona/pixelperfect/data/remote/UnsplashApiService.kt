@@ -22,8 +22,8 @@ interface UnsplashApiService {
     ): UnsplashImageDto
 
     @Headers("Authorization: Client-ID $API_KEY")
-    @GET("/photos/{id}")
-    suspend fun searchImage(
+    @GET("/search/photos")
+    suspend fun searchImages(
         @Query("query") query: String,
         @Query("page") page: Int,
         @Query("per_page") perPage: Int

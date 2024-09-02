@@ -43,11 +43,10 @@ fun NavGraphSetup(
                 images = homeViewModel.images,
                 onImageClick = { imageId ->
                     navController.navigate(Routes.FullImageScreen(imageId))
-                               },
-                onSearchClick = {
-                    navController.navigate(Routes.SearchScreen)
                 },
-                onFABClick = { navController.navigate(Routes.FavoritesScreen) })
+                onSearchClick = { navController.navigate(Routes.SearchScreen) },
+                onFABClick = { navController.navigate(Routes.FavoritesScreen) }
+            )
         }
         composable<Routes.SearchScreen> {
             val searchViewModel: SearchViewModel = hiltViewModel()
@@ -62,8 +61,8 @@ fun NavGraphSetup(
                 onImageClick = { imageId ->
                     navController.navigate(Routes.FullImageScreen(imageId))
                 },
-                onSearch = { searchViewModel.searchImages(it)},
-
+                onSearch = { searchViewModel.searchImages(it) },
+                onToggleFavoriteStatus = { searchViewModel.toggleFavoriteStatus(it) }
             )
         }
         composable<Routes.FavoritesScreen> {
@@ -76,8 +75,8 @@ fun NavGraphSetup(
             FullImageScreen(
                 snackbarHostState = snackbarHostState,
                 snackbarEvent = fullImageViewModel.snackbarEvent,
-                onBackClick = { navController.navigateUp() },
                 image = fullImageViewModel.image,
+                onBackClick = { navController.navigateUp() },
                 onPhotographerNameClick = { profileLink ->
                     navController.navigate(Routes.ProfileScreen(profileLink))
                 },
@@ -89,8 +88,8 @@ fun NavGraphSetup(
         composable<Routes.ProfileScreen> { backStackEntry ->
             val profileLink = backStackEntry.toRoute<Routes.ProfileScreen>().profileLink
             ProfileScreen(
-                onBackClick = { navController.navigateUp() },
-                profileLink = profileLink
+                profileLink = profileLink,
+                onBackClick = { navController.navigateUp() }
             )
         }
     }

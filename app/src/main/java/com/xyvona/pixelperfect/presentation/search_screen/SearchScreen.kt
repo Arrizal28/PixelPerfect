@@ -48,25 +48,30 @@ import kotlinx.coroutines.flow.Flow
 @Composable
 fun SearchScreen(
     snackbarHostState: SnackbarHostState,
-    snackbarEvent: Flow<SnackbarEvent>,
     searchedImages: LazyPagingItems<UnsplashImage>,
-    onImageClick: (String) -> Unit,
-    onBackClick: () -> Unit,
+    snackbarEvent: Flow<SnackbarEvent>,
     searchQuery: String,
     onSearchQueryChange: (String) -> Unit,
+    onBackClick: () -> Unit,
     onSearch: (String) -> Unit,
-    modifier: Modifier = Modifier
+    onImageClick: (String) -> Unit,
+    onToggleFavoriteStatus: (UnsplashImage) -> Unit
 ) {
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
+
     var isSuggestionChipsVisible by remember { mutableStateOf(false) }
+
     var showImagePreview by remember { mutableStateOf(false) }
     var activeImage by remember { mutableStateOf<UnsplashImage?>(null) }
 
     LaunchedEffect(key1 = true) {
         snackbarEvent.collect { event ->
-            snackbarHostState.showSnackbar(message = event.message, duration = event.duration)
+            snackbarHostState.showSnackbar(
+                message = event.message,
+                duration = event.duration
+            )
         }
     }
 
@@ -75,9 +80,9 @@ fun SearchScreen(
         focusRequester.requestFocus()
     }
 
-    Box(modifier = modifier.fillMaxSize()) {
+    Box(modifier = Modifier.fillMaxSize()) {
         Column(
-            modifier = modifier.fillMaxSize(),
+            modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             SearchBar(
@@ -92,18 +97,23 @@ fun SearchScreen(
                     keyboardController?.hide()
                     focusManager.clearFocus()
                 },
-                active = false,
-                onActiveChange = {},
-                content = {},
-                placeholder = { Text("Search...") },
+                placeholder = { Text(text = "Search...") },
+                leadingIcon = {
+                    Icon(imageVector = Icons.Filled.Search, contentDescription = "Search")
+                },
                 trailingIcon = {
-                    IconButton(onClick = { if(searchQuery.isNotEmpty()) onSearchQueryChange("") else onBackClick() }) {
+                    IconButton(
+                        onClick = {
+                            if (searchQuery.isNotEmpty()) onSearchQueryChange("")
+                            else onBackClick()
+                        }
+                    ) {
                         Icon(imageVector = Icons.Filled.Close, contentDescription = "Close")
                     }
                 },
-                leadingIcon = {
-                    Icon(imageVector = Icons.Filled.Search, contentDescription = "Search")
-                }
+                active = false,
+                onActiveChange = {},
+                content = {}
             )
             AnimatedVisibility(visible = isSuggestionChipsVisible) {
                 LazyRow(
@@ -118,7 +128,7 @@ fun SearchScreen(
                                 keyboardController?.hide()
                                 focusManager.clearFocus()
                             },
-                            label = { Text(text = keyword)},
+                            label = { Text(text = keyword) },
                             colors = SuggestionChipDefaults.suggestionChipColors(
                                 containerColor = MaterialTheme.colorScheme.primaryContainer,
                                 labelColor = MaterialTheme.colorScheme.onPrimaryContainer
@@ -134,7 +144,8 @@ fun SearchScreen(
                     activeImage = image
                     showImagePreview = true
                 },
-                onImageDragEnd = { showImagePreview = false }
+                onImageDragEnd = { showImagePreview = false },
+                onToggleFavoriteStatus = onToggleFavoriteStatus
             )
         }
         ZoomedImageCard(

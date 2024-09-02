@@ -1,12 +1,15 @@
 package com.xyvona.pixelperfect.di
 
 import android.content.Context
+import androidx.room.Room
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
+import com.xyvona.pixelperfect.data.local.PixPerfectDatabase
 import com.xyvona.pixelperfect.data.remote.UnsplashApiService
 import com.xyvona.pixelperfect.data.repository.AndroidImageDownloader
 import com.xyvona.pixelperfect.data.repository.ImageRepositoryImpl
 import com.xyvona.pixelperfect.data.repository.NetworkConnectivityObserverImpl
 import com.xyvona.pixelperfect.data.util.Constants
+import com.xyvona.pixelperfect.data.util.Constants.PIX_PERF_DATABASE
 import com.xyvona.pixelperfect.domain.repository.Downloader
 import com.xyvona.pixelperfect.domain.repository.ImageRepository
 import com.xyvona.pixelperfect.domain.repository.NetworkConnectivityObserver
@@ -42,10 +45,23 @@ object AppModule {
 
     @Provides
     @Singleton
+    fun providePixPerDatabase(
+        @ApplicationContext context: Context
+    ): PixPerfectDatabase {
+        return Room.databaseBuilder(
+            context,
+            PixPerfectDatabase::class.java,
+            PIX_PERF_DATABASE
+        ).build()
+    }
+
+    @Provides
+    @Singleton
     fun provideImageRepository(
-        apiService: UnsplashApiService
+        apiService: UnsplashApiService,
+        database: PixPerfectDatabase
     ): ImageRepository {
-        return ImageRepositoryImpl(apiService)
+        return ImageRepositoryImpl(apiService, database)
     }
 
     @Provides
@@ -70,4 +86,5 @@ object AppModule {
     ): NetworkConnectivityObserver {
         return NetworkConnectivityObserverImpl(context, scope)
     }
+
 }

@@ -19,7 +19,8 @@ fun ImageVerticalGrid(
     images: LazyPagingItems<UnsplashImage>,
     onImageClick: (String) -> Unit,
     onImageDragStart: (UnsplashImage?) -> Unit,
-    onImageDragEnd: () -> Unit
+    onImageDragEnd: () -> Unit,
+    onToggleFavoriteStatus: (UnsplashImage) -> Unit
 ) {
     LazyVerticalStaggeredGrid(
         modifier = modifier,
@@ -41,7 +42,9 @@ fun ImageVerticalGrid(
                             onDragEnd = { onImageDragEnd() },
                             onDrag = { _, _ -> }
                         )
-                    }
+                    },
+                onToggleFavoriteStatus = { image?.let { onToggleFavoriteStatus(it) } },
+                isFavorite = false
             )
         }
     }

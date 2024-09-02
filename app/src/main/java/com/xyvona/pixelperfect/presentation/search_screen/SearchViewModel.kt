@@ -26,6 +26,7 @@ import javax.inject.Inject
 class SearchViewModel @Inject constructor(
     private val repository: ImageRepository
 ) : ViewModel() {
+
     private val _snackbarEvent = Channel<SnackbarEvent>()
     val snackbarEvent = _snackbarEvent.receiveAsFlow()
 
@@ -35,11 +36,28 @@ class SearchViewModel @Inject constructor(
     fun searchImages(query: String) {
         viewModelScope.launch {
             try {
-                repository.searchImages(query).cachedIn(viewModelScope)
-                    .collect { _searchImages.value = it }
+                repository
+                    .searchImages(query)
+                    .cachedIn(viewModelScope)
+                    .collect { _searchImages.value = it}
             } catch (e: Exception) {
-                _snackbarEvent.send(SnackbarEvent(message = "Something went wrong. ${e.message}"))
+                _snackbarEvent.send(
+                    SnackbarEvent(message = "Something went wrong. ${e.message}")
+                )
             }
         }
     }
+
+    fun toggleFavoriteStatus(image: UnsplashImage) {
+        viewModelScope.launch {
+            try {
+                repository.toggleFavoriteStatus(image)
+            } catch (e: Exception) {
+                _snackbarEvent.send(
+                    SnackbarEvent(message = "Something went wrong. ${e.message}")
+                )
+            }
+        }
+    }
+
 }

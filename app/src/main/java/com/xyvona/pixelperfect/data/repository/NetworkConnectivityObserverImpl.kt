@@ -26,15 +26,14 @@ class NetworkConnectivityObserverImpl(
     private val connectivityManager =
         context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
-    private val _networkStatus = observer().stateIn(
+    private val _networkStatus = observe().stateIn(
         scope = scope,
         started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5000),
         initialValue = NetworkStatus.Disconnected
     )
-
     override val networkStatus: StateFlow<NetworkStatus> = _networkStatus
 
-    private fun observer(): Flow<NetworkStatus> {
+    private fun observe(): Flow<NetworkStatus> {
         return callbackFlow {
             val connectivityCallback = object : NetworkCallback() {
                 override fun onAvailable(network: Network) {
@@ -52,7 +51,6 @@ class NetworkConnectivityObserverImpl(
                 .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
                 .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
                 .build()
-
             connectivityManager.registerNetworkCallback(request, connectivityCallback)
             awaitClose {
                 connectivityManager.unregisterNetworkCallback(connectivityCallback)
@@ -60,5 +58,4 @@ class NetworkConnectivityObserverImpl(
         }
             .distinctUntilChanged()
     }
-
 }
