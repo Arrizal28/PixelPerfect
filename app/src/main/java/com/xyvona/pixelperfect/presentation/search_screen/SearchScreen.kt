@@ -50,6 +50,7 @@ fun SearchScreen(
     snackbarHostState: SnackbarHostState,
     searchedImages: LazyPagingItems<UnsplashImage>,
     snackbarEvent: Flow<SnackbarEvent>,
+    favoriteImageIds: List<String>,
     searchQuery: String,
     onSearchQueryChange: (String) -> Unit,
     onBackClick: () -> Unit,
@@ -144,6 +145,7 @@ fun SearchScreen(
                     activeImage = image
                     showImagePreview = true
                 },
+                favoriteImageIds = favoriteImageIds,
                 onImageDragEnd = { showImagePreview = false },
                 onToggleFavoriteStatus = onToggleFavoriteStatus
             )

@@ -36,6 +36,22 @@ fun UnsplashImage.toFavoriteImageEntity(): FavoriteImageEntity {
     )
 }
 
+fun FavoriteImageEntity.toDomainModel(): UnsplashImage {
+    return UnsplashImage(
+        id = this.id,
+        imageUrlSmall = this.imageUrlSmall,
+        imageUrlRegular = this.imageUrlRegular,
+        imageUrlRaw = this.imageUrlRaw,
+        photographerName = this.photographerName,
+        photographerUsername = this.photographerUsername,
+        photographerProfileImgUrl = this.photographerProfileImgUrl,
+        photographerProfileLink = this.photographerProfileLink,
+        width = this.width,
+        height = this.height,
+        description = this.description
+    )
+}
+
 fun List<UnsplashImageDto>.toDomainModelList(): List<UnsplashImage> {
     return this.map { it.toDomainModel() }
 }

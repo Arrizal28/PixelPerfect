@@ -1,4 +1,4 @@
-package com.xyvona.pixelperfect.presentation.search_screen
+package com.xyvona.pixelperfect.presentation.favorites_screen
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -27,30 +27,26 @@ import java.net.UnknownHostException
 import javax.inject.Inject
 
 @HiltViewModel
-class SearchViewModel @Inject constructor(
+class FavoriteViewModel @Inject constructor(
     private val repository: ImageRepository
 ) : ViewModel() {
 
     private val _snackbarEvent = Channel<SnackbarEvent>()
     val snackbarEvent = _snackbarEvent.receiveAsFlow()
 
-    private val _searchImages = MutableStateFlow<PagingData<UnsplashImage>>(PagingData.empty())
-    val searchImages = _searchImages
+    val favoriteImages: StateFlow<PagingData<UnsplashImage>> = repository.getAllFavoriteImages()
+        .catch { exception ->
+            _snackbarEvent.send(
+                SnackbarEvent(message = "Something went wrong. ${exception.message}")
+            )
 
-    fun searchImages(query: String) {
-        viewModelScope.launch {
-            try {
-                repository
-                    .searchImages(query)
-                    .cachedIn(viewModelScope)
-                    .collect { _searchImages.value = it}
-            } catch (e: Exception) {
-                _snackbarEvent.send(
-                    SnackbarEvent(message = "Something went wrong. ${e.message}")
-                )
-            }
         }
-    }
+        .cachedIn(viewModelScope)
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = PagingData.empty()
+        )
 
     val favoriteImagesId: StateFlow<List<String>> = repository.getFavoriteImageIds()
         .catch { exception ->

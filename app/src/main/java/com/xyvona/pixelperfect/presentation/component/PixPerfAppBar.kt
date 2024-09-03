@@ -43,7 +43,8 @@ fun PixPerfAppBar(
     scrollBehavior: TopAppBarScrollBehavior,
     modifier: Modifier = Modifier,
     title: String = "Pixel Perfect",
-    onSearchClick: () -> Unit = {}
+    onSearchClick: () -> Unit = {},
+    navigationIcon: @Composable () -> Unit = {}
 ) {
     CenterAlignedTopAppBar(modifier = modifier, scrollBehavior = scrollBehavior, title = {
         Text(text = buildAnnotatedString {
@@ -60,7 +61,8 @@ fun PixPerfAppBar(
         }
     }, colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
         scrolledContainerColor = MaterialTheme.colorScheme.background
-    )
+    ),
+        navigationIcon = navigationIcon
     )
 }
 
