@@ -2,10 +2,10 @@ package com.xyvona.pixelperfect.data.local.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.xyvona.pixelperfect.data.util.Constants.FAVORITE_IMAGE_TABLE
+import com.xyvona.pixelperfect.data.util.Constants.UNSPLASH_IMAGE_TABLE
 
-@Entity(tableName = FAVORITE_IMAGE_TABLE)
-data class FavoriteImageEntity(
+@Entity(tableName = UNSPLASH_IMAGE_TABLE)
+data class UnsplashImageEntity(
     @PrimaryKey
     val id: String,
     val imageUrlSmall: String,

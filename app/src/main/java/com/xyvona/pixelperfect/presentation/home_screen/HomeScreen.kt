@@ -26,6 +26,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.paging.compose.LazyPagingItems
 import com.xyvona.pixelperfect.R
 import com.xyvona.pixelperfect.data.remote.dto.UnsplashImageDto
 import com.xyvona.pixelperfect.domain.model.UnsplashImage
@@ -42,7 +43,9 @@ fun HomeScreen(
     snackbarHostState: SnackbarHostState,
     snackbarEvent: Flow<SnackbarEvent>,
     scrollBehavior: TopAppBarScrollBehavior,
-    images: List<UnsplashImage>,
+    favoriteImageIds: List<String>,
+    onToggleFavoriteStatus: (UnsplashImage) -> Unit,
+    images: LazyPagingItems<UnsplashImage>,
     onImageClick: (String) -> Unit,
     onSearchClick: () -> Unit,
     onFABClick: () -> Unit,
@@ -66,15 +69,17 @@ fun HomeScreen(
                 onSearchClick = onSearchClick,
                 scrollBehavior = scrollBehavior
             )
-//            ImageVerticalGrid(
-//                images = images,
-//                onImageClick = onImageClick,
-//                onImageDragStart = { image ->
-//                    activeImage = image
-//                    showImagePreview = true
-//                },
-//                onImageDragEnd = { showImagePreview = false }
-//            )
+            ImageVerticalGrid(
+                images = images,
+                onImageClick = onImageClick,
+                onImageDragStart = { image ->
+                    activeImage = image
+                    showImagePreview = true
+                },
+                favoriteImageIds = favoriteImageIds,
+                onImageDragEnd = { showImagePreview = false },
+                onToggleFavoriteStatus = onToggleFavoriteStatus
+            )
         }
         FloatingActionButton(
             modifier = modifier.align(Alignment.BottomEnd).padding(24.dp),

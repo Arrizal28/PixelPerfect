@@ -72,6 +72,7 @@ fun FavoriteButton(
     onClick: () -> Unit
 ) {
     FilledIconToggleButton(
+        modifier = modifier,
         checked = isFavorite,
         onCheckedChange = { onClick() },
         colors = IconButtonDefaults.filledIconToggleButtonColors(
